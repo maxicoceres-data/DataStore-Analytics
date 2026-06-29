@@ -1,11 +1,10 @@
 import sys
 from pathlib import Path
-sys.path.append(str(Path(__file__).resolve().parent.parent))
-
 import pandas as pd 
 import sqlite3
-from pathlib import Path
 from utils.cleaning import limpieza_total
+
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 DIR_PATH = Path(__file__).parent 
 
