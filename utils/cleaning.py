@@ -138,4 +138,4 @@ def limpieza_total(df):
     df["total_venta"] = df["precio_unitario"] * df["cantidad"]
     
     
-    return df
+    return df, reporte
