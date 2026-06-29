@@ -1,17 +1,22 @@
 import pandas as pd 
 
 
-#funcion de limpieza de precio
+
+columnas_validas = [
+    "id_orden", "fecha", "producto", "categoria", "precio_unitario",
+            "cantidad", "canal", "ciudad", "metodo_pago", "total_venta"
+]
+
+#función de limpieza de precio
 
 def limpieza_precio(df):
     """Limpieza de precio.
 
     Args:
         df (_type_): dataframe subido por cliente
-        reporte (_type_): pequeño reporte de cantidad limpiada.
 
     Returns:
-        Retorna el dataframe y el reporte.
+        Retorna el dataframe y reporte de la información limpiada.
     """
     precios_negativos = df[df["precio_unitario"] <= 0]
     filas_precios_negativos = len(precios_negativos)
@@ -31,12 +36,22 @@ def limpieza_precio(df):
 #funcion de cantidad
 
 def limpieza_cantidad(df):
+    """Limpieza de cantidad.
+
+    Args:
+        df (_type_): dataframe subido por cliente
+
+    Returns:
+        Retorna el dataframe y reporte de la información limpiada.
+        
+    """
+    
     cantidad_null_negativo = df.loc[(df["cantidad"]<=0) | (df["cantidad"].isna())]
     filas_cantidad_null_negativo = len(cantidad_null_negativo)
     
     if filas_cantidad_null_negativo < df.shape[0] * 0.1:
         df = df[df["cantidad"] > 0].copy()
-        reporte = f"Se eliminan {filas_cantidad_null_negativo} filas por precios nulos, 0 o negativos"
+        reporte = f"Se eliminan {filas_cantidad_null_negativo} filas por cantidad nulas, 0 o negativos"
     else:
         reporte = f"Cantidad erronea alta. ({df.shape[0] / filas_cantidad_null_negativo}), revisar el dataset."
         
@@ -45,9 +60,15 @@ def limpieza_cantidad(df):
 
 
 def limpieza_fecha(df):
-    
-    invalidas = df["fecha"].isna() | (pd.to_datetime(df["fecha"], errors="coerce").isna())
-    
+    """Limpieza de fecha.
+
+    Args:
+        df (_type_): dataframe subido por cliente
+
+    Returns:
+        Retorna el dataframe con la columna fecha pasada a tiempo y reporte de las filas que se eliminaron por fecha inválida.
+        
+    """
     
     df["fecha"] = pd.to_datetime(df["fecha"], errors="coerce")
     n = df["fecha"].isna().sum()
@@ -57,6 +78,18 @@ def limpieza_fecha(df):
 
 
 def limpieza_col_texto(df,columna):
+    
+    """Limpieza de columnas de textos.
+
+    Args:
+        df (_type_): dataframe subido por cliente.
+        columna : nombre de la columna a limpiar.
+    Returns:
+        Retorna el dataframe con los textos limpios y reporte de los
+        datos que han sido limpiados.
+        
+    """
+    
     df[columna] = (
         df[columna]
         .str.strip()
@@ -68,16 +101,27 @@ def limpieza_col_texto(df,columna):
     
     df[columna] = df[columna].fillna("sin especificar")
     
-    reporte = f"Hay {len(productos_nulos)} {columna} nulos, se modifica por 'sin especidifcar'"
+    reporte = f"Hay {len(productos_nulos)} {columna} nulos, se modifica por 'sin especificar'"
     
     return df, reporte
 
 
 def limpieza_total(df):
     
+    """Función de limpieza total del dataframe.
+
+    Args:
+        df (_type_): dataframe subido por cliente
+
+    Returns:
+        Retorna el dataframe con limpieza total (con todas las funciones anteriores ).
+        
+    """
+    
     df = df.copy()
     reporte = {}
     
+    df = df[columnas_validas]
     df.columns = df.columns.str.lower().str.strip().str.replace(" ", "_")
     
     df,reporte["precio"] = limpieza_precio(df)
