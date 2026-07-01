@@ -1,10 +1,10 @@
 import streamlit as st 
-import plotly.express as px
-import pandas as pd
+import json
+from pathlib import Path
 from utils.metrics import resultado_total_venta, resultado_ticket_promedio
 from utils.charts import figura_top_5, figura_categoria, figura_canal, figura_mes, figura_ordenes, figura_dia_semana
 
-
+reporte = json.loads((Path("database/reporte.json")).read_text(encoding="utf-8"))
 
 #metrica de streamlit
 st.title("DataStore Analytics")
@@ -45,3 +45,8 @@ with col6:
 st.divider()
 
 figura_dia_semana()
+
+
+with st.expander("📋 Reporte de calidad de datos"):
+    for clave, mensaje in reporte.items():
+        st.write(f"**{clave}**: {mensaje}")

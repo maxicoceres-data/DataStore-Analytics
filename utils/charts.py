@@ -1,8 +1,6 @@
 import streamlit as st 
 import plotly.express as px
-import pandas as pd
-from utils.data_loader import get_data
-from utils.metrics import resultado_cantidad_ordenes,resultado_dia_semana, resultado_facturacion_canal, resultado_facturacion_categoria,resultado_ticket_promedio,resultado_top_5,resultado_total_venta,resultado_venta_mes,run_query
+from utils.metrics import resultado_cantidad_ordenes,resultado_dia_semana, resultado_facturacion_canal, resultado_facturacion_categoria,resultado_top_5,resultado_venta_mes
 
 
 
